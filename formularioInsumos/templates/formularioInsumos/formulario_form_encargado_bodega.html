@@ -1,0 +1,188 @@
+{% extends 'insumos/index.html' %}
+
+{% load formularios_filters %}
+
+{% block content %}
+    
+      <div class="pagetitle">
+        <h1>Insumos</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'formularioInsumos:index' %}">Inicio</a></li>
+            <li class="breadcrumb-item">Formulario Solicitud Insumos</li>
+          </ol>
+        </nav>
+      </div><!-- End Page Title -->
+  
+      <section class="section">
+        <div class="row">
+          <div class="col-lg-12">
+  
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Formulario Solicitud Insumos</h5>
+  
+                <!-- Create/Update FormularioInsumos -->
+                <form id="formFormulario" enctype="multipart/form-data" method="post" autocomplete="off">
+                    {% csrf_token %}
+
+                    <div class="form-group mb-2">
+                      <label>Folio</label>
+                      <input class="form-control" value="{{ folio_solicitud }}" disabled>
+                    </div>
+
+                    {% for field in form %}
+
+                    {% if 'form-header' in field.field.widget.attrs.class %}
+                    <div class="form-group mb-2">
+                        <label>{{field.label}}</label>
+                        {% if field.field.required %}
+                            <span class="required"></span>
+                        {% endif %}
+                    
+                        {{field}}
+                        {% if field.help_text %}
+                            <small style="color: grey">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p style="color: red">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+
+                {% endfor %}
+
+                        <!-- inline form for detalle Fsctura Compra start -->
+
+                        <!-- EXPLAINING with named_formsets.variants as formset -->
+                        <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                        <!-- Note: here variants is our CompraInsumoFormSet name, used in get_named_formsets function in views.py -->
+
+                        {% with named_formsets.detallesolicitud as formset %}
+                            {{ formset.management_form }}
+
+                            <script type="text/html" id="detallesolicitud-template">
+                                <tr id="detallesolicitud-__prefix__" class= hide_all>
+                                    {% for fields in formset.empty_form.hidden_fields %}
+                                        {{ fields }}
+                                    {% endfor %}
+                                
+                                    {% for fields in formset.empty_form.visible_fields %}
+                                        <td>{{fields}}</td>
+                                    {% endfor %}
+
+                                    <td><button type="button" class="btn btn-sm btn-warning delete-item-solic">Eliminar</button></td>
+                                </tr>
+                            </script>
+
+
+                            <div class="d-flex mt-3">
+                                <div class="col-6 flex-fill">
+                                    <h5 class="card-title col-6">Insumos Solicitados</h5>
+                                </div>
+                            
+                                <div class="col-6 flex-fill text-end mt-3"></div>
+                            </div>
+
+
+                                <table class="table table-striped">
+                                    <thead class="text-center">
+                                        <th scope="col">Insumo </th>
+                                        <th scope="col">Precio </th>
+                                        <th scope="col">Cantidad Solicitada </th>
+                                        <th scope="col">Cantidad Aprobada </th>
+                                    </thead>
+                                    <tbody id="item-detallesolicitud" class="text-center">
+
+                                        {% for formss in formset %}
+                                            {{ formss.management_form }}
+
+                                            <tr id="detallesolicitud-{{ forloop.counter0 }}" class= hide_all> 
+                                                {{ formss.id }}
+
+                                                <td>
+                                                  {{ formss.instance.id_insumo }}
+                                                </td>
+
+                                                <td>
+                                                  {{ formss.precio.value }}
+                                                </td>
+
+                                                <td>
+                                                  {{ formss.cantidad.value }}
+                                                </td>
+
+                                                <td class="insumos-entregados">
+                                                  {{ formss.cantidad_entregada.value }}
+                                                </td>
+
+                                            </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>                      
+
+                                <br>
+                                <div class="alert alert-info" role="alert">  
+                                  <div class="row">                          
+                                    <div class="col-md-6 fw-bold text-center">Costo</div>
+                                    <div class="col-md-6 fw-bold text-center">{{ formset.instance.pk|get_costo_formulario }}</div>
+                                  </div>
+                                </div>
+                            
+
+                            {% endwith %}
+                            <!-- inline form for Factura Compra end -->
+
+                            {% for field in form %}
+
+                              {% if 'form-hidden' in field.field.widget.attrs.class %}                              
+                                  {{field}}
+                              {% endif %}
+
+                            {% endfor %}
+                    <br><br>
+
+                    <div class="col-12 text-end">
+                      {% if folio_solicitud|get_edo_folio_insumo == "APROBADO" %}
+                        <input id="btnEntregado" type="submit" class="btn btn-success" value="Entregado" data-edo-solicitud="4">
+                      {% endif %}
+                      <a href="{% url 'formularioInsumos:index' %}" class="btn btn-outline-primary">Cancelar</a>
+                    </div>
+
+                </form>
+                <!-- End Formulario FormularioInsumos -->
+  
+              </div>
+            </div>
+  
+          </div>
+  
+          <div class="col-lg-5"></div>
+          
+        </div>
+      </section>
+  
+{% endblock %}
+
+
+{% block jscript %}
+<script>
+  $(function() {
+
+    $('.disabled').on('mousedown', function(e) {
+      e.preventDefault();
+    });
+
+
+    $('#formFormulario').submit( function(e) {      
+      e.preventDefault();
+      idEstadoSolic = $('#' + e.originalEvent.submitter.id).data('edo-solicitud');
+      $('#id_estado_solicitud').val(idEstadoSolic);
+      this.submit();
+    });
+
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'insumos/index.html' %}
+
+{% load humanize %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+        <h1>Facturas de Compra</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'compras:compras-list' %}">Inicio</a></li>
+                <li class="breadcrumb-item">Facturas de Compra</li>
+                <li class="breadcrumb-item active">Listado</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="col-12 mb-3">
+        {% include 'insumos/searchbar.html' with urllist='compras:compras-list' urlcreate='compras:compra-create' btnnombre='Agregar Factura de Compra' urlextra='compras:facturas-exportar' btnextra='Exportar a Excel' btnExtraVisible=True %}
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Listado de Facturas de Compras</h5>
+
+        {% if compras %}
+            <table class="table table-striped table-bordered">
+                <thead class="text-center">
+                    <tr>
+                        <th scope="col">Fecha Factura</th>                      
+                        <th scope="col">Guía</th>
+                        <th scope="col">Orden de Compra</th>
+                        <th scope="col">RUT Proveedor</th>
+                        <th scope="col">Nombre Proveedor</th>
+                        <th scope="col">Total Compra</th>
+                        <th scope="col" colspan="2"></th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    {% for compra in compras %}
+                    <tr>
+                        <td>{{ compra.fecha_compra|date:"d-m-Y" }}</td>                        
+                        <td>{{ compra.guia }}</td>
+                        <td>{{ compra.orden_de_compra }}</td>
+                        <td>{{ compra.id_proveedor.rut_proveedor }}</td>
+                        <td class="text-start">{{ compra.id_proveedor.nombre_proveedor }}</td>
+                        <td>$ {{ compra.total_compra|intcomma }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'compras:compra-detail' compra.id %}" data-toggle="tooltip" title="Ver" class="me-1"><i class="bi bi-eye-fill"></i></a>
+                            <!--<a href="{ % url 'compras:compra-update' compra.id % }" class="me-1">Editar</a>-->
+                            <!--<a href="{ % url 'proveedores:proveedor-delete' prov.id % }" class="ms-1">Eliminar</a>-->
+                        </td>
+                    </tr>                
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+            <div class="col-12 mb-3">
+                {% include 'insumos/pagination.html'%}
+            </div>
+
+            
+        {% else %}          
+            <h3 class="text-center">No se encontraron Facturas de Compras</h3>        
+        {% endif %}
+
+        </div>
+    </div>
+
+{% endblock %}

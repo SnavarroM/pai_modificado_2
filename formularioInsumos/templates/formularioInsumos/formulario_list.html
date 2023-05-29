@@ -1,0 +1,97 @@
+{% extends 'insumos/index.html' %}
+
+{% load departamentos_filters %}
+{% load formularios_filters %}
+
+{% block content %}
+
+    <div class="pagetitle">
+        <h1>Formularios Solicitud de Insumos</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'formularios:formularios-list' %}">Inicio</a></li>
+                <li class="breadcrumb-item">Formulario Solicitud de Insumos</li>
+                <li class="breadcrumb-item active">Listado</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="col-12 mb-3">
+        {% if formularios.count > 0  %}
+            {% if user.userprofile.id_perfil.id != 2 and user.userprofile.id_perfil.id != 4 %}
+                {% include 'insumos/searchbar.html' with urllist='formularios:formularios-list' urlcreate='formularios:formulario-create' btnnombre='Solicitud de Insumos' urlextra='formularios:formularios-exportar' btnextra='Exportar a Excel' btnExtraVisible=True %}
+            {% endif %}
+        {% elif formularios.count == 0 %}
+            {% if user.userprofile.id_perfil.id != 2 and user.userprofile.id_perfil.id != 4 %}
+                {% include 'insumos/searchbar.html' with urllist='formularios:formularios-list' urlcreate='formularios:formulario-create' btnnombre='Solicitud de Insumos' urlextra='formularios:formularios-exportar' btnextra='Exportar a Excel' btnExtraVisible=False %}
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Listado de Solicitud de Insumos</h5>
+
+        {% if formularios %}
+            <table class="table table-striped">
+                <thead class="text-center">
+                    <tr>
+                        <th scope="col">Folio</th>
+                        <th scope="col">Fecha Creación</th>                    
+                        <th scope="col">Solicitante</th>
+                        <th scope="col">Costo</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Autoriza</th>
+                        <th scope="col" colspan="2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for frm in formularios %}
+                    <tr class="text-center">
+                        <td>{{ frm.folio }}</td>
+                        <td>{{ frm.fecha_creacion|date:"d-m-Y" }}</td>
+                        <td>{{ frm.rut_solicitante|get_nombre_solicitante }}</td>
+                        <td>$ {{ frm.id_formulario|get_costo_formulario }}</td>
+                        <td><span class="{{ frm.id_formulario|get_etiqueta_solicitud_insumo }}">{{ frm.id_formulario|get_edo_solicitud_insumo }}</span></td>
+                        <td>{{ frm.rut_jefe_aprobador|get_nombre_jefe }}</td>
+                        <td class="text-center">
+
+                            {% if user.userprofile.id_perfil.id == 4 %}
+                                <a href="{% url 'formularioInsumos:formulario-jefatura' frm.id_formulario %}" data-toggle="tooltip" title="Ver" class="me-2"><i class="bi bi-eye-fill"></i></a>
+                            {% endif %}
+
+                            {% if user.userprofile.id_perfil.id == 1 %}
+                                <a href="{% url 'formularioInsumos:formulario-adminiterna' frm.id_formulario %}" data-toggle="tooltip" title="Ver" class="me-2"><i class="bi bi-eye-fill"></i></a>
+                            {% endif %}
+
+                            {% if user.userprofile.id_perfil.id == 3 %}
+                                {% if frm.id_formulario|get_edo_solicitud_insumo == 'APROBADO' or frm.id_formulario|get_edo_solicitud_insumo == 'ENTREGADO' %}
+                                    <a href="{% url 'formularioInsumos:formulario-bodega' frm.id_formulario %}" data-toggle="tooltip" title="Ver" class="me-2"><i class="bi bi-eye-fill"></i></a>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if user.userprofile.id_perfil.id == 5 %}                                
+                                    <a href="{% url 'formularioInsumos:formulario-bodega' frm.id_formulario %}" data-toggle="tooltip" title="Ver" class="me-2"><i class="bi bi-eye-fill"></i></a>
+                            {% endif %}
+
+                            {% if frm.id_formulario|get_edo_solicitud_insumo == 'APROBADO' or frm.id_formulario|get_edo_solicitud_insumo == 'ENTREGADO' %}
+                                <a href="{% url 'reportes:form-insumo' frm.id_formulario %}" data-toggle="tooltip" title="Descargar Comprobante" target="_blank" class="me-2"><i class="bi bi-file-earmark-pdf-fill"></i></a>
+                            {% endif %}
+                        </td>
+                    </tr>                
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+            <div class="col-12 mb-3">
+                {% include 'insumos/pagination.html'%}
+            </div>
+
+            
+        {% else %}          
+            <h3 class="text-center">No se encontraron solicitudes de Insumos</h3>   
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

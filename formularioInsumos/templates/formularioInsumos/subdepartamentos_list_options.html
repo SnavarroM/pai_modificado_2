@@ -1,0 +1,4 @@
+    <option value="">Seleccione Sub Departamento</option>
+{% for subdpto in subdepartamentos %}
+    <option value="{{ subdpto.id }}">{{ subdpto.nombre_sub_dpto }}</option>
+{% endfor %}

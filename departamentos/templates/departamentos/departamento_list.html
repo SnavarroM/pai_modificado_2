@@ -1,0 +1,66 @@
+{% extends 'insumos/index.html' %}
+
+{% load departamentos_filters %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+      <h1>Departamentos</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'departamentos:dptos-list' %}">Inicio</a></li>
+          <li class="breadcrumb-item">Departamentos</li>
+          <li class="breadcrumb-item active">Listado</li>
+        </ol>
+      </nav>
+    </div>
+
+    <div class="col-12 mb-3">
+      {% include 'insumos/searchbar.html' with urllist='departamentos:dptos-list' urlcreate='departamentos:dpto-create' btnnombre='Agregar Departamento' urlextra='departamentos:departamentos-exportar' btnextra='Exportar a Excel' btnExtraVisible=True %}
+  </div>
+
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Listado de Departamentos</h5>
+
+        {% if departamentos %}
+          <table class="table table-striped table-bordered">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">Código Departamento</th>
+                    <th scope="col">Nombre Departamento</th>
+                    <th scope="col">Jefatura</th>
+                    <th scope="col">Subrogante</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col" colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dpto in departamentos %}
+                <tr>
+                    <td class="text-center">{{ dpto.id_dpto|safe }}</td>
+                    <td>{{ dpto.nombre_dpto|upper }}</td>
+                    <td>{{ dpto.rut_jefe|get_nombre_jefe }}</td>
+                    <td>{{ dpto.rut_jefe_subrogante|get_nombre_jefe|default_if_none:"" }}</td>
+                    <td class="text-center">{{ dpto.get_estado_dpto }}</td>
+                    <td class="text-center">
+                      <a href="{% url 'departamentos:dpto-update' dpto.id %}" data-toggle="tooltip" title="Editar" class="me-1"><i class="bi bi-pencil-fill"></i></a>
+                    </td>
+                </tr>                
+                {% endfor %}
+            </tbody>
+          </table>
+
+          
+          <div class="col-12 mb-3">
+            {% include 'insumos/pagination.html'%}
+          </div>
+
+
+        {% else %}          
+          <h3 class="text-center">No se encontraron Departamentos</h3>        
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

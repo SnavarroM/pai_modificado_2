@@ -1,0 +1,12 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+
+    <form id="formDeletePerfil" method="post">{% csrf_token %}
+        <p>¿Desea eliminar el perfil "{{ object }}"?</p>
+        {{ form }}
+        <input type="submit" class="btn btn-primary" value="Confirmar">
+        <a href="{% url 'user:perfiles-list' %}" class="btn btn-outline-primary">Cancelar</a>
+    </form>
+
+{% endblock %}

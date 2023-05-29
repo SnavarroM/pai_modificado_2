@@ -1,0 +1,148 @@
+{% extends 'insumos/index.html' %}
+
+{% load formulariosr_filters %}
+
+{% block content %}
+
+<div class="pagetitle">
+    <h1>Formulario de Solicitud o Reclamo</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'formulariosr:formulariosr-list' %}">Inicio</a></li>
+            <li class="breadcrumb-item">Solicitud o Reclamo</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-10">
+
+        <div class="card">
+            <div class="card-body">
+            <h5 class="card-title">Resumen Solicitud/Reclamo</h5>
+
+            {% if formulariosr %}
+
+            <div class="col-md-12">
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Folio</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ formulariosr.folioSR }}</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Tipo Formulario</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ formulariosr.tipo_formulario }}</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Solicitante</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ formulariosr.rut_solicitante }}</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Email</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ formulariosr.email }}</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Anexo</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ formulariosr.anexo }}</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Fecha Ingreso</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ formulariosr.folioSR|get_fecha_hora_ingreso }}</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Departamento</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ formulariosr.id_departamento }}</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Sub Departamento</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ formulariosr.id_sub_departamento }}</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Unidad</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ formulariosr.id_unidad }}</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Cargo</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ formulariosr.id_cargo }}</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Comentario</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ formulariosr.comentarios }}</label>
+                    </div>
+                </div>
+
+                <!--    AÑADIR CONTROL POR PERFIL DE USUARIO    -->
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Respuesta</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{% if hist_respuesta %} {{ hist_respuesta }} {% endif %}</label>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Indicación</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{% if hist_indicacion %} {{ hist_indicacion }} {% endif %}</label>
+                    </div>
+                </div>
+                <!--    FIN AÑADIR CONTROL POR PERFIL DE USUARIO    -->
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label label-detail">Estado Solicitud</label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label">{{ hist_edosolic }}</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3 text-center">
+                <div class="col-sm-9"></div>
+                <div class="col-sm-3">
+                    <a href="{% url 'formulariosr:formulariosr-list' %}" class="btn btn-primary">Volver</a>
+                </div>
+            </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+<div class="col-lg-5"></div>
+
+</div>
+</section>
+
+{% endblock %}

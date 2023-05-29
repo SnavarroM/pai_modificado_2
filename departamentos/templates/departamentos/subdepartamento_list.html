@@ -1,0 +1,68 @@
+{% extends 'insumos/index.html' %}
+
+{% load departamentos_filters %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+      <h1>Sub Departamentos</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'departamentos:subdptos-list' %}">Inicio</a></li>
+          <li class="breadcrumb-item">Departamentos</li>
+          <li class="breadcrumb-item active">Listado</li>
+        </ol>
+      </nav>
+    </div>
+
+    <div class="col-12 mb-3">
+      {% include 'insumos/searchbar.html' with urllist='departamentos:subdptos-list' urlcreate='departamentos:subdpto-create' btnnombre='Agregar Sub Departamento' urlextra='departamentos:subdepartamentos-exportar' btnextra='Exportar a Excel' btnExtraVisible=True %}
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Listado de Sub Departamentos</h5>
+
+        {% if subdepartamentos %}
+          <table class="table table-striped table-bordered">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">Código Sub Departamento</th>
+                    <th scope="col">Departamento</th>
+                    <th scope="col">Nombre Sub Departamento</th>
+                    <th scope="col">Jefatura</th>
+                    <th scope="col">Subrogante</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col" colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subdpto in subdepartamentos %}
+                <tr>
+                    <td class="text-center">{{ subdpto.id_sub_dpto|safe }}</td>
+                    <td>{{ subdpto.departamento }}</td>
+                    <td>{{ subdpto.nombre_sub_dpto }}</td>
+                    <td class="text-center">{{ subdpto.rut_jefe|get_nombre_jefe }}</td>
+                    <td class="text-center">{{ subdpto.rut_jefe_subrogante|get_nombre_jefe|default_if_none:"" }}</td>
+                    <td class="text-center">{{ subdpto.get_estado_subdpto }}</td>
+                    <td class="text-center">
+                      <a href="{% url 'departamentos:subdpto-update' subdpto.id %}" data-toggle="tooltip" title="Editar" class="me-1"><i class="bi bi-pencil-fill"></i></a>
+                    </td>
+                </tr>                
+                {% endfor %}
+            </tbody>
+          </table>
+
+          
+          <div class="col-12 mb-3">
+            {% include 'insumos/pagination.html'%}
+          </div>
+
+
+        {% else %}          
+          <h3 class="text-center">No se encontraron Sub Departamentos</h3>        
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,136 @@
+{% load formularios_filters %}
+{% load insumos_filters %}
+{% load static %}
+
+<html>
+<head>
+    <style>
+      @page{ 
+        size:letter portrait;
+        
+        @frame header_frame {
+            -pdf-frame-content: header_content;
+            left: 1cm; width: 20cm; top: 1cm; height: 7cm;
+        }
+        @frame content_frame {
+            left: 1cm; width: 20cm; top: 8cm; height: 18cm;
+        }        
+        @frame footer_frame {
+            -pdf-frame-content: footer_content;
+            left: 1cm; width: 20cm; top: 25cm; height: 4cm;
+        }
+      }
+    </style>
+</head>
+
+<body>
+
+<!-- 'header_frame' -->
+<div id="header_content" style="font-size:13px;">
+    <table style="width: 100%; border-collapse: collapse; text-align:center;">
+      <tbody style="text-align:left">
+          <tr>
+            <td style="width:12cm; padding:5px"><img style="width:140px;height:20px" src="pai_staticfiles/insumos/assets/img/logo-cenabast.png"></td>
+            <td style="width:2cm"></td>
+            <td style="width:6cm"></td>
+          </tr>
+          <tr>
+            <td style="padding-left:5px">Central de Abastecimiento del S.N.S.S</td>
+            <td></td>
+            <td><b>Folio:</b> {{solicitud.folio}}</td>
+          </tr>
+          <tr>
+            <td style="padding-left:5px">RUT 61.608.700-2</td>
+            <td></td>
+            <td><b>Fecha Emisión:</b> {{solicitud.fecha_creacion}}</td>
+          </tr>
+          <tr style="padding-top:10px; text-align:center; font-size:14px;">
+            <td colspan="3"><b>Formulario de Adquisición de Bienes y/o Servicios</b></td>
+          </tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <table style="width: 100%; border-collapse: collapse;">
+      <tbody style="padding-left:10px;padding-top:5px; font-size:11px">
+        <tr>
+          <td><b>Departamento:</b> <span>{{solicitud.id_departamento}}</span></td>
+          <td><b>Nombre Solicitante:</b> <span>{{solicitud.rut_solicitante|get_nombre_solicitante}}</span></td>
+        </tr>
+        <tr>
+          <td><b>Sub Departamento:</b> <span>{{solicitud.id_sub_departamento|default_if_none:''}}</span></td>
+          <td><b>Autorizado por:</b> <span>{{solicitud.rut_jefe_aprobador|get_nombre_solicitante}}</span></td>
+        </tr>
+        <tr>
+          <td><b>Unidad:</b> <span>{{solicitud.id_unidad|default_if_none:''}}</span></td>
+          <td><b>Autorizado Admin. Interna por:</b> <span>{{solicitud.rut_admin_interna|get_nombre_solicitante}}</span></td>
+        </tr>
+    </table>
+
+    <hr>
+</div>
+
+
+
+<!-- 'footer_frame' -->
+<div id="footer_content">
+    <table style="width:100%; text-align:center;">
+        <tr>
+          <td></td>
+          <td style="text-align:center; padding:10px 0; border-top:solid 1px black;">
+            Firma del Solicitante
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3" style="text-align:center;">San Eugenio #40, Ñuñoa  |  Santiago, Región Metropolitana | (+56) 225748200</td>
+        </tr>
+    </table>   
+</div>
+
+
+<!-- HTML Content -->
+
+  <table style='width:100%; border:solid 1px black; border-collapse: collapse; text-align:center;'>
+    <thead>
+      <tr style='font-weight:bold; background-color:#4c4c93; color:white; padding:5px; border:solid 1px; padding:5px;vertical-align:middle;'><td>Denominación</td><td>Unidad de Despacho</td><td>Cantidad</td></tr>
+    </thead>
+
+    <tbody>
+    {% for det in detalle %}
+      <tr style='border:solid 1px; padding:5px;'>
+          <td style="width:60%; text-align:left;">{{det.id_insumo}}</td>
+          <td style="width:25%; text-align:center;">{{det.id_insumo_id|get_unidad_medida}}</td>
+          <td style="width:15%; text-align:center;">{{det.cantidad_entregada}}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <br>
+  <p style="page-break-after: always; text-align:center"> -------  COMPROBANTE ENCARGADO BODEGA  ------- </p>
+
+
+
+  <table style='width:100%; border:solid 1px black; border-collapse: collapse; text-align:center;'>
+    <thead>
+      <tr style='font-weight:bold; background-color:#4c4c93; color:white; padding:5px; border:solid 1px; padding:5px; vertical-align:middle;'><td>Denominación</td><td>Unidad de Despacho</td><td>Cantidad</td></tr>
+    </thead>
+    <tbody>
+    
+      {% for det in detalle %}
+      <tr style='border:solid 1px; padding:5px;'>
+        <td style="width:70%; text-align:left;">{{det.id_insumo}}</td>
+        <td style="width:25%; text-align:center;">{{det.id_insumo_id|get_unidad_medida}}</td>
+        <td style="width:10%; text-align:center;">{{det.cantidad_entregada}}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <br>
+  <p style="text-align:center"> -------  COMPROBANTE FUNCIONARIO  ------- </p>
+
+</body>
+</html>

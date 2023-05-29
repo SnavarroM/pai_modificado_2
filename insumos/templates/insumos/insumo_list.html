@@ -1,0 +1,95 @@
+{% extends 'insumos/index.html' %}
+
+{% comment %} {% block js %}
+  <script>
+    function eliminarInsumo(id) {
+      Swal.fire({
+        "title": "Eliminar Insumo",
+        "text": "¿Desea eliminar el insumo {{ object }}?",
+        "icon": "question",
+        "showCancelButton": true,
+        "cancelButtonText": "Cancelar",
+        "confirmButtonText": "Eliminar",
+        "confirmButtonColor": "#dc3545"
+      })
+      .then(function(result) {
+        if (result.isConfirmed) {
+          window.location.href = "/insumo-delete/" + id + "/"
+          document.getElementById("formDeleteInsumo").submit();
+        }
+      })
+    }
+  </script>
+{% endblock %} {% endcomment %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+      <h1>Insumos</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'insumos:insumos-list' %}">Inicio</a></li>
+          <li class="breadcrumb-item">Insumos</li>
+          <li class="breadcrumb-item active">Listado</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <div class="col-12 mb-3">
+      {% include 'insumos/searchbar.html' with urllist='insumos:insumos-list' urlcreate='insumos:insumo-create' btnnombre='Agregar Insumo' urlextra='insumos:insumos-exportar' btnextra='Exportar a Excel' btnExtraVisible=True urlcierre='cierreMensual:cierre' btncierre='Cierre Mensual' btnCierreVisible=True %}
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Listado de Insumos</h5>
+
+        {% if insumos %}
+          <table class="table table-striped table-bordered">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">Código</th>
+                    <th scope="col">Denominación</th>
+                    <th scope="col">Unidad de Despacho</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Saldo</th>
+                    <th scope="col">Stock Crítico</th>
+                    <th scope="col">Cuenta Presupuestaria</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col" colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+              {% for insumo in insumos %}
+                <tr>
+                    <th scope="row" class="text-center">{{ insumo.codigo_insumo }}</th>
+                    <td>{{ insumo.denominacion }}</td>
+                    <td class="text-center">{{ insumo.unidad_medida }}</td>
+                    <td class="text-center">{{ insumo.precio }}</td>
+                    <td class="text-center">{{ insumo.saldo }}</td>
+                    <td class="text-center">{{ insumo.stock_critico }}</td>
+                    <td class="text-center">{{ insumo.categoria }}</td>
+                    <td class="text-center">{{ insumo.get_estado_insumo }}</td>
+                    <td class="text-center">                      
+                      <a href="{% url 'insumos:insumo-update' insumo.id %}" data-toggle="tooltip" title="Editar" class="me-2"><i class="bi bi-pencil-fill"></i></a>
+                      {% if user.userprofile.id_perfil.id == 1 %}
+                        <a href="{% url 'insumos:insumo-delete' insumo.id %}" data-toggle="tooltip" title="Eliminar" class="ms-2"><i class="bi bi-trash3-fill d-none"></i></a>
+                      {% endif %}
+                    </td>
+                </tr> 
+              {% endfor %}               
+            </tbody>
+          </table>
+
+
+          <div class="col-12 mb-3">
+            {% include 'insumos/pagination.html'%}
+          </div>
+
+
+        {% else %}          
+          <h3 class="text-center">No se encontraron insumos</h3>        
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

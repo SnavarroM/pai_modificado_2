@@ -1,0 +1,81 @@
+{% extends 'insumos/index.html' %}
+
+{% load formularios_filters %}
+{% load formulariosr_filters %}
+{% load users_filters %}
+
+{% block content %}
+
+    <div class="pagetitle">
+        <h1>Formularios Solicitud o Reclamo</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'formulariosr:formulariosr-list' %}">Inicio</a></li>
+                <li class="breadcrumb-item">Formulario Solicitud o Reclamo</li>
+                <li class="breadcrumb-item active">Listado</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="col-12 mb-3">
+        {% if formulariosr.count > 0 and user.id|get_usuario_departamento != None %}
+            {% include 'insumos/searchbar.html' with urllist='formulariosr:formulariosr-list' urlcreate='formulariosr:formulariosr-create' btnnombre='Solicitud o Reclamo' urlextra='formulariosr:formulariosr-exportar' btnextra='Exportar a Excel' btnExtraVisible=True %}
+        {% elif formulariosr.count == 0 and user.id|get_usuario_departamento != None %}
+            {% include 'insumos/searchbar.html' with urllist='formulariosr:formulariosr-list' urlcreate='formulariosr:formulariosr-create' btnnombre='Solicitud o Reclamo' urlextra='formulariosr:formulariosr-exportar' btnextra='Exportar a Excel' btnExtraVisible=False %}
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Listado de Solicitud o Reclamos</h5>
+
+        {% if formulariosr %}
+            <table class="table table-striped table-bordered">
+                <thead class="text-center">
+                    <tr>
+                        <th scope="col">Folio</th>
+                        <th scope="col">Tipo Solicitud</th>                    
+                        <th scope="col">Solicitante</th>
+                        <th scope="col">Fecha Creación</th>
+                        <th scope="col">Estado Solicitud</th>
+                        <th scope="col">Tiempo Transcurrido</th>
+                        <th scope="col" colspan="2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for frm in formulariosr %}
+                    <tr class="text-center">
+                        <td>{{ frm.folioSR }}</td>
+                        <td>{{ frm.tipo_formulario }}</td>
+                        <td>{{ frm.rut_solicitante|get_nombre_solicitante }}</td>
+                        <td>{{ frm.folioSR|get_fecha_hora_ingreso }}</td>
+                        <td><span class="{{ frm.id_formulario|get_etiqueta_solicitud }}">{{ frm.id_formulario|get_estado_solicitud }}</span></td>
+                        <td>{{ frm.folioSR|get_fecha_hora_ingreso|get_difer_fechas:frm.folioSR }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'formulariosr:formulariosr-detail' frm.id_formulario %}" data-toggle="tooltip" title="Ver" class="me-2"><i class="bi bi-eye-fill"></i></a>
+                            {% if user.userprofile.id_perfil.id == 1 or user.userprofile.id_perfil.id == 3 %}
+                                {% if frm.tipo_formulario == 'SOLICITUD' %}
+                                    <a href="{% url 'formulariosr:formulariosr-solicitud' frm.id_formulario %}" data-toggle="tooltip" title="Editar" class="me-2"><i class="bi bi-pencil-fill"></i></a>
+                                {% else %}
+                                    <a href="{% url 'formulariosr:formulariosr-reclamo' frm.id_formulario %}" data-toggle="tooltip" title="Editar" class="me-2"><i class="bi bi-pencil-fill"></i></a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>                
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+            <div class="col-12 mb-3">
+                {% include 'insumos/pagination.html'%}
+            </div>
+
+
+        {% else %}          
+            <h3 class="text-center">No se encontraron solicitudes de Insumos o Reclamos</h3>        
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

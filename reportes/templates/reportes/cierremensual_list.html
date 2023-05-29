@@ -1,0 +1,62 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+        <h1>Reporte Cierre Mensual Insumos</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'reportes:cierremensual-report' %}">Inicio</a></li>
+                <li class="breadcrumb-item">Cierre Mensual Insumos</li>
+                <li class="breadcrumb-item active">Listado</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <div class="col-12 mb-3">
+        {% include 'reportes/filter_search_bar.html' with urllist='reportes:cierremensual-report' urlextra='reportes:cierremensual-exportar' valfiltro=cierremensual.first.id_cierre_mensual.id_cierre_mensual  btnextra='Exportar a Excel' nombreFiltro='Fecha de Cierre' selectqry=objCierre %}
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Cierre Mensual Insumos / Fecha de Cierre [ {{ cierremensual.first.id_cierre_mensual.fecha_cierre|date:"d-m-Y" }} ]</h5>
+
+        {% if cierremensual %}
+            <table class="table table-striped table-bordered">
+                <thead class="text-center">
+                    <tr>
+                        <th scope="col">Código</th>
+                        <th scope="col">Denominación</th>
+                        <th scope="col">Unidad de Despacho</th>
+                        <th scope="col">Saldo</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Cuenta Presupuestaria</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cierre in cierremensual %}
+                    <tr>
+                        <th scope="row" class="text-center">{{ cierre.codigo_insumo|safe }}</th>
+                        <td>{{ cierre.denominacion }}</td>
+                        <td class="text-center">{{ cierre.id_unidad_medida }}</td>
+                        <td class="text-center">{{ cierre.saldo }}</td>
+                        <td class="text-center">{{ cierre.precio }}</td>
+                        <td class="text-center">{{ cierre.id_categoria }}</td>
+                    </tr> 
+                    {% endfor %}               
+                </tbody>
+            </table>
+
+
+            <div class="col-12 mb-3">
+                {% include 'insumos/pagination.html'%}
+            </div>
+
+
+        {% else %}          
+            <h3 class="text-center">No se encontraron cierres mensuales</h3>        
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

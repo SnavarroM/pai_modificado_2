@@ -1,0 +1,12 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+
+    <form id="formDeleteCategoria" method="post">{% csrf_token %}
+        <p>¿Desea eliminar la categoría "{{ object }}"?</p>
+        {{ form }}
+        <input type="submit" class="btn btn-primary" value="Confirmar">
+        <a href="{% url 'insumos:categorias-list' %}" class="btn btn-outline-primary">Cancelar</a>
+    </form>
+
+{% endblock %}

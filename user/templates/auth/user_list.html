@@ -1,0 +1,63 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+        <h1>Usuarios</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'insumos:categorias-list' %}">Inicio</a></li>
+                <li class="breadcrumb-item">Usuarios</li>
+                <li class="breadcrumb-item active">Listado</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <div class="col-12 mb-3">
+        <!--{ % include 'insumos/searchbar.html' with urllist='user:usuarios-list' urlcreate='' btnnombre='Agregar Usuario' % }-->
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Listado de Usuarios</h5>
+
+        {% if usuarios %}
+            <table class="table table-striped">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Rut</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Anexo</th>
+                    <th scope="col">Nombre de Usuario</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col" colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usu in usuarios %}
+                <tr>
+                    <td>{{ usu.first_name }}</td>
+                    <td>{{ usu.last_name }}</td>
+                    <td>{{ usu.rut }}</td>
+                    <td>{{ usu.email }}</td>
+                    <td>{{ usu.anexo }}</td>
+                    <td>{{ usu.username }}</td>
+                    <td>{{ usu.estado }}</td>                                        
+                    <td class="text-center">
+                        <!--<a href="{  % url 'insumos:categoria-update' categoria.id %  }" class="me-1">Editar</a>
+                        <a href="{  % url 'insumos:categoria-delete' categoria.id %  }" class="ms-1">Eliminar</a>-->
+                    </td>
+                </tr>                
+                {% endfor %}
+            </tbody>
+            </table>
+
+        {% else %}          
+            <h3 class="text-center">No se encontraron categorías</h3>        
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

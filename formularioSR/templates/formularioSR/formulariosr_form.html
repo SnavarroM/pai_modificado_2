@@ -1,0 +1,59 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+        <h1>Formulario de Solicitud o Reclamo</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'formulariosr:formulariosr-list' %}">Inicio</a></li>
+                <li class="breadcrumb-item">Solicitud o Reclamo</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-8">
+
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-title">Formulario Solicitud o Reclamo</h5>
+
+                <!-- Create/Update Solicitud o Reclamo -->
+                <form method="POST" action="" novalidate autocomplete="off">
+                    {% csrf_token %}
+                    {{form.as_p}}
+
+                    <div class="col-12 text-end">
+                        <input type="submit" class="btn btn-primary" value="Guardar">
+                        <a href="{% url 'formulariosr:formulariosr-list' %}" class="btn btn-outline-primary">Cancelar</a>
+                    </div>
+                </form>
+                <!-- End Formulario Solicitud o Reclamo -->
+
+            </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-5"></div>
+        
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block jscript %}
+<script>
+
+$(function() {
+
+    $('#id_id_cargo, #id_id_departamento, #id_id_sub_departamento, #id_id_unidad').on('mousedown', function(e) {
+        e.preventDefault();
+    });
+
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+        <h1>Gestión de Solicitud o Reclamo</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'formulariosr:formulariosr-list' %}">Inicio</a></li>
+                <li class="breadcrumb-item">Solicitud o Reclamo</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-8">
+
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-title">Gestión Solicitud o Reclamo</h5>
+
+                <form id="formFormularioSR" enctype="multipart/form-data" method="post" autocomplete="off">
+                    
+                    {% csrf_token %}
+
+                    <div class="form-group mb-2">
+                        <label>Folio</label>
+                        <input class="form-control" value="{{ folio_solicitud }}" disabled>
+                    </div>
+
+                    {{ form.as_p }}
+
+
+                    {% comment %} {% for field in form %}
+
+                        {% if 'form-header' in field.field.widget.attrs.class %}
+                        <div class="form-group mb-2">
+                            <label>{{field.label}}</label>
+                            {% if field.field.required %}
+                                <span class="required"></span>
+                            {% endif %}
+                        
+                            {{field}}
+                            {% if field.help_text %}
+                                <small style="color: grey">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <p style="color: red">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                    {% endfor %} {% endcomment %}
+
+
+                    {% for formset in inlines %}
+                        <div class="form-group mb-2">
+                            {{ formset }}
+                        </div>
+                    {% endfor %} 
+
+
+                    {% for field in form %}
+
+                        {% if 'form-hidden' in field.field.widget.attrs.class %}                              
+                            {{field}}
+                        {% endif %}
+
+                    {% endfor %}
+
+                    <br>
+
+                    {% if edo_solicitud < 3 %}
+                        <div id="footer-guardar" class="col-12 text-end">                        
+                            <input id="btnRespuestaDerivar" type="submit" class="btn btn-primary" value="Guardar" data-edo-solicitud="2">                        
+                            <a href="{% url 'formulariosr:formulariosr-list' %}" class="btn btn-outline-primary">Cancelar</a>
+                        </div>
+                    {% endif %}
+
+                    <br>
+                    
+                    {% if form.tipo_formulario.value == 'SOLICITUD' and edo_solicitud == 3 %}
+                        <!-- Si perfil Funcionario Admin. Interna -->
+                        <div id="footer-solucion" class="col-12 text-end">                        
+                            <label class=""> Determinar el Formulario como: </label>
+                            <a href="{% url 'formulariosr:formulariosr-cierre' form.instance.pk 4 %}" class="btn btn-success" data-edo-solicitud="4">Solucionado</a>
+                            <a href="{% url 'formulariosr:formulariosr-cierre' form.instance.pk 5 %}" class="btn btn-danger" data-edo-solicitud="5">Sin Solución</a>
+                            <a href="{% url 'formulariosr:formulariosr-list' %}" class="btn btn-outline-primary">Salir</a>
+                        </div>
+                    {% elif edo_solicitud > 3 %}
+                        <div id="footer-solucion" class="col-12 text-end">   
+                            <a href="{% url 'formulariosr:formulariosr-list' %}" class="btn btn-outline-primary">Salir</a>
+                        </div>
+                    {% endif %}
+                
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-5"></div>
+
+    </div>
+</section>
+
+
+{% endblock %}
+
+
+{% block jscript %}
+<script>
+$(function() {
+
+        $('.disabled').on('mousedown', function(e) {
+            e.preventDefault();
+        });
+
+        $(window).on("load",function() {
+            // Mostrar solo el registro Historial más reciente del formset
+            totalSRHist = $("#id_srhistorial-TOTAL_FORMS").val();
+
+            for (i=0; i < totalSRHist-1; i++) {
+                $("[name*='srhistorial-" + i + "']").addClass("d-none");
+                $("label[for*='id_srhistorial-" + i + "']").addClass("d-none");
+
+            }
+
+        });
+
+        $('#formFormularioSR').submit( function(e) {      
+            e.preventDefault();
+            idEstadoSolic = $('#' + e.originalEvent.submitter.id).data('edo-solicitud');
+            $("[name*='estado_solicitud']").val(idEstadoSolic);
+            this.submit();
+        });
+
+});
+</script>
+{% endblock %}

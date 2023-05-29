@@ -1,0 +1,61 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+        <h1>Proveedor</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'proveedores:proveedores-list' %}">Inicio</a></li>
+                <li class="breadcrumb-item">Proveedores</li>
+                <li class="breadcrumb-item active">Listado</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="col-12 mb-3">
+        {% include 'insumos/searchbar.html' with urllist='proveedores:proveedores-list' urlcreate='proveedores:proveedor-create' btnnombre='Agregar Proveedor' urlextra='proveedores:proveedores-exportar' btnextra='Exportar a Excel' btnExtraVisible=True %}
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Listado de Proveedor</h5>
+
+        {% if proveedores %}
+        <table class="table table-striped table-bordered">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">RUT Proveedor</th>
+                    <th scope="col">Nombre Proveedor</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col" colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                {% for prov in proveedores %}
+                <tr>
+                    <td>{{ prov.rut_proveedor }}</td>
+                    <td class="text-start">{{ prov.nombre_proveedor }}</td>
+                    <td>{{ prov.get_estado_proveedor }}</td>
+                    <td>
+                        <a href="{% url 'proveedores:proveedor-update' prov.id %}" data-toggle="tooltip" title="Editar" class="me-2"><i class="bi bi-pencil-fill"></i></a>
+                        <a href="{% url 'proveedores:proveedor-delete' prov.id %}" data-toggle="tooltip" title="Eliminar" class="ms-2"><i class="bi bi-trash3-fill d-none"></i></a>
+                    </td>
+                </tr>                
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+        <div class="col-12 mb-3">
+            {% include 'insumos/pagination.html'%}
+        </div>
+
+
+        {% else %}          
+            <h3 class="text-center">No se encontraron Proveedores</h3>        
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

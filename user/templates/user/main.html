@@ -1,0 +1,15 @@
+{% extends 'insumos/index.html' %}
+
+{% load static %}
+{% load users_filters %}
+
+{% block content %}
+    Bienvenid@ {{ user.username|get_nombre_usuario }}
+
+    {% if user.id|get_usuario_departamento == None %}
+        <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+            Su usuario aún no se encuentra habilitado para usar la plataforma.
+        </div>
+    {% endif %}
+
+{% endblock %}

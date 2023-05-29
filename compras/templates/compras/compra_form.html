@@ -1,0 +1,409 @@
+{% extends 'insumos/index.html' %}
+
+
+{% block content %}
+
+    <div class="pagetitle">
+        <h1>Factura Compra</h1>
+        <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'compras:compras-list' %}">Inicio</a></li>
+            <li class="breadcrumb-item">Facturas de Compra</li>
+        </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Formulario Factura Compra</h5>
+
+                    <form id="product_form" enctype="multipart/form-data" method="post" autocomplete="off">
+                        {% csrf_token %}
+
+                        {% for field in form %}
+
+                            {% if 'detalle-header' in field.field.widget.attrs.class %}
+                                <div class="form-group mb-2">
+                                    <label>{{field.label}}</label>
+                                    {% if field.field.required %}
+                                        <span class="required"></span>
+                                    {% endif %}
+                                
+                                    {{field}}
+                                    {% if field.help_text %}
+                                        <small style="color: grey">{{ field.help_text }}</small>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <p style="color: red">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        
+                        {% endfor %}
+
+
+                        <!-- inline form for detalle Fsctura Compra start -->
+
+                        <!-- EXPLAINING with named_formsets.variants as formset -->
+                        <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                        <!-- Note: here variants is our CompraInsumoFormSet name, used in get_named_formsets function in views.py -->
+
+                        {% with named_formsets.detallefactura as formset %}
+                            {{ formset.management_form }}
+
+                            <script type="text/html" id="detallefactura-template">
+                                <tr id="detallefactura-__prefix__" class= hide_all>
+                                    {% for fields in formset.empty_form.hidden_fields %}
+                                        {{ fields }}
+                                    {% endfor %}
+                                
+                                    {% for fields in formset.empty_form.visible_fields %}
+                                        <td>{{fields}}</td>
+                                    {% endfor %}
+
+                                    <td><button type="button" class="btn btn-sm btn-warning delete-item">Eliminar</button></td>
+                                </tr>
+                            </script>
+
+                            <br>
+
+                            <div class="d-flex">
+                                <div class="col-6 flex-fill">
+                                    <h5 class="card-title col-6">Detalle Factura</h5>
+                                </div>
+                            
+                                <div class="col-6 flex-fill text-end mt-3">
+                                    <a href="#" id="add-detallefactura-button" class="btn btn-primary add-detallefactura">Agregar Insumo</a>
+                                </div>
+                            </div>
+
+
+                                <table class="table table-striped">
+                                    <thead class="text-center">
+                                        <th scope="col" class="required">Insumo </th>
+                                        <th scope="col" class="required">Cantidad </th>
+                                        <th scope="col" class="required">Precio Neto </th>
+                                        <th scope="col">Precio con IVA </th>
+                                        <th scope="col">Precio Promedio </th>
+                                        <th scope="col">Total </th>
+                                        <th scope="col" class="d-none"></th>
+                                    </thead>
+                                    <tbody id="item-detallefactura">
+
+                                        {% for formss in formset %}
+                                            {{ formss.management_form }}
+                                            <tr id="detallefactura-{{ forloop.counter0 }}" class= hide_all> 
+                                                {{ formss.id }}
+                                                {% for field in formss.visible_fields %}
+                                                    <td>
+                                                        {{ field }}
+                                                        {% for error in field.errors %}
+                                                            <span style="color: red">{{ error }}</span>
+                                                        {% endfor %}
+                                                    </td>
+                                                {% endfor %}
+
+                                                {% if formss.instance.pk %}
+                                                    <td>
+                                                        
+                                                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal{{formss.instance.pk}}" onclick="$('#exampleModal{{formss.instance.pk}}').modal('show')">
+                                                            Eliminar
+                                                        </button>
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="exampleModal{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel{{formss.instance.pk}}"¿Desea eliminar el registro?</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a href="{% url 'compras:detalle-delete' formss.instance.pk %}" type="button" class="btn btn-primary">Eliminar</a>
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                
+                                                {% else %} 
+                                                    <td><button type="button" class="btn btn-sm btn-warning delete-item d-none">Eliminar</button></td>
+                                                {% endif %}
+
+                                            </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>                      
+                            
+                            {% endwith %}
+                            <!-- inline form for Factura Compra end -->
+
+                            <br>
+
+                            <div class="form-group mb-2">
+                                <label>{{form.descuento.label}}</label>
+                                {% if form.descuento.field.required %}
+                                    <span class="required"></span>
+                                {% endif %}
+                            
+                                {{form.descuento}}
+                                {% if form.descuento.help_text %}
+                                    <small style="color: grey">{{ form.descuento.help_text }}</small>
+                                {% endif %}
+                                {% for error in form.descuento.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group mb-2">
+                                <label>{{form.total_neto.label}}</label>
+                                {% if form.total_neto.field.required %}
+                                    <span class="required"></span>
+                                {% endif %}
+                            
+                                {{form.total_neto}}
+                                {% if form.total_neto.help_text %}
+                                    <small style="color: grey">{{ form.total_neto.help_text }}</small>
+                                {% endif %}
+                                {% for error in form.total_neto.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group mb-2">
+                                <label>{{form.total_iva.label}}</label>
+                                {% if form.total_iva.field.required %}
+                                    <span class="required"></span>
+                                {% endif %}
+                            
+                                {{form.total_iva}}
+                                {% if form.total_iva.help_text %}
+                                    <small style="color: grey">{{ form.total_iva.help_text }}</small>
+                                {% endif %}
+                                {% for error in form.total_iva.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group mb-2">
+                                <label>{{form.total_compra.label}}</label>
+                                {% if form.total_compra.field.required %}
+                                    <span class="required"></span>
+                                {% endif %}
+                            
+                                {{form.total_compra}}
+                                {% if form.total_compra.help_text %}
+                                    <small style="color: grey">{{ form.total_compra.help_text }}</small>
+                                {% endif %}
+                                {% for error in form.total_compra.errors %}
+                                    <p style="color: red">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+
+
+                            {% for field in form %}
+
+                                {% if 'detalle-hidden' in field.field.widget.attrs.class %}                              
+                                    {{field}}
+                                {% endif %}
+
+                            {% endfor %}
+
+
+                            <br>
+                            <div class="col-12 text-end">
+                                <input type="submit" class="btn btn-primary" value="Guardar">
+                                <a href="{% url 'compras:compras-list' %}" class="btn btn-outline-primary">Cancelar</a>
+                            </div>                            
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-5">
+            <input type="hidden" id="valor_iva" value="{{ valor_iva }}">
+        </div>
+        
+        </div>
+    </section>
+
+{% endblock content %}
+
+
+{% block jscript %}
+    <script>
+
+        $(document).ready(function() {
+
+            $(window).on("load",function() {
+                // Eliminar fila extra en detalle insumo
+                if ( $("#item-detallefactura tr").length > 1) {
+                    $("#item-detallefactura tr:last").remove();
+                }
+
+                // Cálculo de Total por cada fila de detalle Insumo
+                var totalNeto = 0;
+                var total = 0;
+                $("#item-detallefactura tr").each(function(){
+                    if ($(this).find("td").eq(2)[0].children[0].value != "") {
+                        totalNeto = parseFloat( $(this).find("td").eq(2)[0].children[0].value );
+                        cantidad = parseInt( $(this).find("td").eq(1)[0].children[0].value );
+                        total = parseInt(cantidad * totalNeto);
+                        $(this).find("td").eq(5)[0].children[0].value = total;
+                    }
+                });
+
+                // Actualizar Cálculo de Totales
+                ActualizarCalculosFooter();
+            });
+
+            $('input[type="date"]').on('click', function() {
+                console.log("date");
+                //$(this).showPicker();
+            });
+
+
+            // when user clicks add more btn of variants
+            $('.add-detallefactura').click(function(ev) {
+                ev.preventDefault();
+
+                var count = $('#item-detallefactura').children().length;
+                var tmplMarkup = $('#detallefactura-template').html();
+                var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);        
+
+                $('#item-detallefactura').append(compiledTmpl);
+
+                // update form count
+                $('#id_detallefactura-TOTAL_FORMS').attr('value', count+1);
+
+                if ( $("#item-detallefactura tr").length > 1) {
+                    $(".delete-item").removeClass("d-none");
+                } else {
+                    $(".delete-item").addClass("d-block");
+                }
+            });
+
+            $(document).on("click",'.delete-item',function(){
+                if ( $("#item-detallefactura tr").length > 1) {
+                    $(this).closest("tr").remove();
+                }
+
+                if ( $("#item-detallefactura tr").length == 1) {
+                    $(".delete-item").addClass("d-none").removeClass("d-block");
+                } 
+            });
+
+            const root = document.getElementById('item-detallefactura');
+
+            root.addEventListener('change', ev => {
+                $(root.children).each(function() {
+                    const prefix = $(this)[0].id;
+
+                    precioUnitario = parseFloat( $(`[name="${prefix}-precio_unitario"]`).val() );
+                    valorIVA = parseFloat( precioUnitario * $("#valor_iva").val() );
+                    precioIVA = parseFloat( precioUnitario + (valorIVA) ).toFixed(2);
+                    $(`[name="${prefix}-precio_con_iva"]`).val( precioIVA );
+
+                    insumo = $(`[name="${prefix}-id_insumo"]`).val();                    
+                    cantidadComprada = $(`[name="${prefix}-cantidad"]`).val();                   
+                    //url = $(`[name="${prefix}-precio_unitario"]`).attr("data-insumo-url");  
+
+                    precioPromedio = parseFloat( getPrecioPromedio( insumo, precioIVA, cantidadComprada, prefix) ).toFixed(2);
+                    $(`[name="${prefix}-precio_promedio"]`).val(precioPromedio);
+
+                    total = parseFloat( precioUnitario * cantidadComprada );
+                    $(`[name="${prefix}-total"]`).val( total );
+
+
+                    // Cálculo footer
+                    ActualizarCalculosFooter();
+                });
+            });
+
+
+            const ActualizarCalculosFooter = () => {
+                totalNeto = getTotalNetoCompra();
+                $('#id_total_neto').val( totalNeto );
+
+                totalIVA = getTotalIVA();
+                $('#id_total_iva').val( totalIVA );
+
+                totalCompra = getTotalCompra();
+                $('#id_total_compra').val( totalCompra );
+            }
+
+
+            $( '#id_descuento' ).change(function() {
+                ActualizarCalculosFooter();
+            });
+
+            const getPrecioPromedio = (codigoInsumo, precioConIva, cantidadCompra, prefix) => {
+                let url = "{% url 'compras:ajax_load_precio_promedio' %}";
+                let res, ret;
+
+                $.ajax({                                      
+                    url: url,                                                 
+                    data: {
+                        'idinsumo': codigoInsumo                                          
+                    },
+                    async: false,
+                    success: function (resp) {
+                        if (resp != null) {
+                            $.each(resp.data, function (key, value) { 
+                                res = value;
+                                precioPromedio = 0;
+
+                                if ( res[0] > 0 && res[1] > 0) {
+                                    c1 = res[0] * res[1];
+                                    c2 = cantidadCompra * precioConIva;
+                                    cT = c1 + c2;
+                                    canT = parseInt(res[0]) + parseInt(cantidadCompra);
+                                    precioPromedio = (cT / canT).toFixed(2);
+                                    
+                                    ret = precioPromedio;
+                                } else {
+                                    ret = precioConIva;
+                                }
+                            });
+                        }
+                    }
+                });
+
+                return ret;
+            }
+
+            const getTotalNetoCompra = () => {
+                var totalNetoCompra = 0;
+                $("#item-detallefactura tr").each(function(){
+                    if ($(this).find("td").eq(5)[0].children[0].value != "") {
+                        totalNetoCompra = totalNetoCompra + parseFloat( $(this).find("td").eq(5)[0].children[0].value.replace(/\./g, '') );
+                    }
+                });
+
+                descuentoCompra = $('#id_descuento').val();
+                totalNetoCompra -= descuentoCompra;
+                return totalNetoCompra;
+            }
+
+            const getTotalIVA = () => {
+                totalIVA =  parseInt( $('#id_total_neto').val() * $('#valor_iva').val() );
+                return totalIVA;
+            }
+
+            const getTotalCompra = () => {
+                return parseInt( $('#id_total_neto').val() )  + parseInt( $('#id_total_iva').val() );
+            }
+
+        });
+
+    </script>
+{% endblock jscript%}

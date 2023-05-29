@@ -1,0 +1,69 @@
+{% extends 'insumos/index.html' %}
+
+{% load departamentos_filters %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+      <h1>Unidades/Secciones</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'departamentos:unidades-list' %}">Inicio</a></li>
+          <li class="breadcrumb-item">Unidades/Secciones</li>
+          <li class="breadcrumb-item active">Listado</li>
+        </ol>
+      </nav>
+    </div>
+
+    <div class="col-12 mb-3">
+      {% include 'insumos/searchbar.html' with urllist='departamentos:unidades-list' urlcreate='departamentos:unidad-create' btnnombre='Agregar Unidad' urlextra='departamentos:unidades-exportar' btnextra='Exportar a Excel' btnExtraVisible=True %}
+  </div>
+
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Listado de Unidades/Secciones</h5>
+
+        {% if unidades %}
+          <table class="table table-striped table-bordered">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">Código Unidad</th>
+                    <th scope="col">Sub Departamento</th>
+                    <th scope="col">Nombre Unidad</th>
+                    <th scope="col">Jefatura</th>
+                    <th scope="col">Subrogante</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col" colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for unidad in unidades %}
+                <tr>
+                    <td class="text-center">{{ unidad.id_unidad|safe }}</td>
+                    <td>{{ unidad.subdepartamento }}</td>
+                    <td>{{ unidad.nombre_unidad }}</td>
+                    <td>{{ unidad.rut_jefe|get_nombre_jefe }}</td>
+                    <td>{{ unidad.rut_jefe_subrogante|get_nombre_jefe|default_if_none:"" }}</td>
+                    <td class="text-center">{{ unidad.get_estado_unidad }}</td>
+                    <td class="text-center">
+                      <a href="{% url 'departamentos:unidad-update' unidad.id %}" data-toggle="tooltip" title="Editar" class="me-1"><i class="bi bi-pencil-fill"></i></a>
+                      <!--<a href="{ % url 'cargos:cargo-delete' cargo.id % }" class="ms-1">Eliminar</a>-->
+                    </td>
+                </tr>                
+                {% endfor %}
+            </tbody>
+          </table>
+
+          
+          <div class="col-12 mb-3">
+            {% include 'insumos/pagination.html'%}
+          </div>
+
+
+        {% else %}          
+          <h3 class="text-center">No se encontraron Unidades</h3>        
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

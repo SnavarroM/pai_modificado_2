@@ -1,0 +1,45 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+
+<div class="pagetitle">
+    <h1>Sub Departamento</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+        <li class="breadcrumb-item">Sub Departamento</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-8">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Formulario Sub Departamento</h5>
+
+            <!-- Create/Update Categorías -->
+            <form method="POST" action="" novalidate autocomplete="off">
+                {% csrf_token %}
+                {{form.as_p}}
+
+                <div class="col-12 text-end">
+                  <input type="submit" class="btn btn-primary" value="Guardar">
+                  <a href="{% url 'departamentos:subdptos-list' %}" class="btn btn-outline-primary">Cancelar</a>
+                </div>
+            </form>
+            <!-- End Formulario Categorías -->
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-5"></div>
+      
+    </div>
+  </section>
+
+{% endblock %}

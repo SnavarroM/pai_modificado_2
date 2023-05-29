@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>A Simple Responsive HTML Email</title>
+    <style type="text/css">
+    body {margin: 0; padding: 0; min-width: 100%!important;}
+    .content {width: 100%; max-width: 600px;}  
+    @media only screen and (min-device-width: 601px) {
+        .content {width: 600px !important;}
+    }
+    .header {padding: 40px 30px 20px 30px;border: 1px solid #e7e7e7;}
+    .col425 {width: 425px!important;}
+    .subhead {font-size: 15px; color: #ffffff; font-family: sans-serif; letter-spacing: 10px;}
+    .h1 {font-size: 33px; line-height: 38px; font-weight: bold;}
+    .h1, .h2, .bodycopy {color: #153643; font-family: sans-serif;}
+    .innerpadding {padding: 30px 30px 30px 30px;}
+    .borderbottom {border-bottom: 1px solid #f2eeed; border: 1px solid #e7e7e7;}
+    .h2 {padding: 0 0 15px 0; font-size: 24px; line-height: 28px; font-weight: bold;}
+    .bodycopy {font-size: 16px; line-height: 22px;}
+    .button {text-align: center; font-size: 18px; font-family: sans-serif; font-weight: bold; padding: 0 30px 0 30px;}
+    .button a {color: #ffffff; text-decoration: none;}
+    @media only screen and (min-device-width: 601px) {
+        .content {width: 600px !important;}
+        .col425 {width: 425px!important;}
+        .col380 {width: 380px!important;}
+    }
+    .footer {padding: 20px 30px 15px 30px; border: 1px solid #e7e7e7;}
+    .footercopy {font-family: sans-serif; font-size: 14px; color: #ffffff;}
+    .footercopy a {color: #ffffff; text-decoration: underline;}
+    @media only screen and (max-width: 550px), screen and (max-device-width: 550px) {
+        body[yahoo] .buttonwrapper {background-color: transparent!important;}
+        body[yahoo] .button a {background-color: #e05443; padding: 15px 15px 13px!important; display: block!important;}
+    }
+    </style>
+</head>
+<body yahoo bgcolor="#FFFFFF">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <table class="content" align="center" cellpadding="0" cellspacing="0" border="0" bordercolor="#286090">
+                    <tr>
+                        <td class="header" bgcolor="#F8F8F8" border="1" bordercolor="#e7e7e7">
+                            <!--AQUI VA EL TITULO-->
+                            <!--
+                            <table width="70" align="left" border="0" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td height="100" style="padding: 0 20px 20px 0;">
+                                        <img src="http://insumos/bootstrap/img/logotipo2.png" width="80" height="80" border="0" alt="" style="border-radius: 25px;" / >
+                                    </td>
+                                </tr>
+                            </table>
+                        -->
+                            <table class="col425" align="left" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 425px;">
+                                <tr>
+                                    <td height="70">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <!--<tr>
+                                                <td class="subhead" style="padding: 0 0 0 3px;">
+                                                    <!--CREATING-->
+                                                <!--</td>
+                                            </tr>-->
+                                            <tr>
+                                                <td class="h1" align="center">
+                                                    SISTEMA CONTROL DE INSUMOS
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="innerpadding borderbottom ">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td class="h2">
+                                        Estimad@, @nombreSolicitante su Solicitud @folio
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="bodycopy">
+                                       Ha sido <strong>APROBADA</strong>
+                                       Administracion Interna le hara entrega de los insumos correspondientes a la brevedad.<br>
+                                       Este es un email automático. Por favor, NO responda este mensaje.
+                                   </td>
+                               </tr>
+                           </table>
+                           <table class="col380" align="left" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 380px;">  
+                              <tr>
+                                <td>
+                                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                      <td class="bodycopy">
+                                                <!--
+                                                    BAJADA DEL MENSAJE
+                                                -->
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                          <td style="padding: 20px 0 0 0;">
+                                            <table class="buttonwrapper" bgcolor="#e05443" border="0" cellspacing="0" cellpadding="0">
+                                              <tr>
+                                                <td class="button" height="45">
+                                                  <a href="http://insumos/index.asp">Ir al Sistema</a>
+                                              </td>
+                                          </tr>
+                                      </table>
+                                  </td>
+                              </tr>
+                          </table>
+                      </td>
+                  </tr>
+              </table>
+          </td>
+      </tr>
+     <!-- <tr>
+     <td class="innerpadding borderbottom" bgcolor="#c7d8a7">-->
+
+        <!--<img src="images/wide.png" width="100%" border="0" alt="" />-->
+        <!--</td>
+    </tr>-->
+    <tr>
+        <td >
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td width="40" height="2" style="text-align: center;" bgcolor="#286090"></td>
+                    <td width="60"  height="2" style="text-align: center;" bgcolor="#eb3646"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="footer" bgcolor="#F8F8F8" style="padding-bottom: 0px;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td align="center" >
+                        José Domingo Cañas #2681, Ñuñoa, Santiago. Teléfono:(562) 25748200
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td >
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="30" height="10" style="text-align: center;" bgcolor="#286090">
+                                 
+                                </td>
+                                <td width="40"  height="10" style="text-align: center;" bgcolor="#eb3646">
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+            </table>
+        </td>
+    </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>

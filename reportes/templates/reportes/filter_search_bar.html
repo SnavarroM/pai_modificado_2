@@ -1,0 +1,31 @@
+<div class="header search-bar d-flex p-3">
+
+        <form id="formfilter"  method="GET" class="search-form align-items-center d-flex">
+
+        {% if selectqry %}                    
+            <div class="form-group row flex-fill">
+                <label class="col-form-label col-2">{{ nombreFiltro }}</label>
+            
+            <div class="col-2 flex-fill">
+                    <select name="filtro" id="filtro" class="form-select select2">
+                        {% for valor, nombre in selectqry %}                        
+                            <option value="{{ valor }}" {% if request.GET.filtro == valor %} selected {%endif%}>{{ nombre|date:"d-m-Y" }}</option>
+                        {% endfor %}
+                    </select>                    
+            </div>
+            </div>
+        {% endif %}            
+
+
+        <div class="col-2 ms-2">
+            <a href="#" class="btn btn-primary" onclick="document.forms['formfilter'].submit();">Buscar</a>
+        </div>
+        </form>
+
+
+    <!-- Exportar Excel -->
+    <div class="col-6 flex-fill text-end pb-2">      
+        <a href="{% url urlextra valfiltro %}" class="btn btn-primary">{{ btnextra }}</a>
+    </div>
+    
+</div>

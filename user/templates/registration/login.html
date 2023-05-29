@@ -1,0 +1,9 @@
+{% extends 'insumos/user-login.html' %}
+
+{% block login %}
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit" class="btn btn-primary">Ingresar</button>              
+  </form>
+{% endblock %}

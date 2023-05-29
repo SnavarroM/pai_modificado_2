@@ -1,0 +1,19 @@
+<div class="header search-bar d-flex p-3">
+  <div class="col-6 flex-fill">
+    <form action="{% url urllist %}" method="GET" class="search-form align-items-center">
+      <input type="text" name="buscar" value="{{ request.GET.buscar }}" placeholder="Buscar" title="Ingrese término de búsqueda" autocomplete="off">
+    </form>
+  </div>
+  
+  <div class="col-6 flex-fill text-end">
+    <a href="{% url urlcreate %}" class="btn btn-primary">{{ btnnombre }}</a>
+
+    {% if btnExtraVisible  %}
+      <a href="{% url urlextra %}" class="btn btn-primary">{{ btnextra }}</a>
+    {% endif %}
+
+    {% if btnCierreVisible  %}
+    <a href="{% url urlcierre %}" class="btn btn-danger">{{ btncierre }}</a>
+    {% endif %}
+  </div>
+</div>

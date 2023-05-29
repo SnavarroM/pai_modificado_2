@@ -1,0 +1,12 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+
+    <form id="formDeleteUnidadMedida" method="post">{% csrf_token %}
+        <p>¿Desea eliminar la unidad de medida "{{ object }}"?</p>
+        {{ form }}
+        <input type="submit" class="btn btn-primary" value="Confirmar">
+        <a href="{% url 'insumos:unidadmedidas-list' %}" class="btn btn-outline-primary">Cancelar</a>
+    </form>
+
+{% endblock %}

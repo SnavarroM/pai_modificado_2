@@ -1,0 +1,70 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+        <h1>Cargos</h1>
+        <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'proveedores:proveedores-list' %}">Inicio</a></li>
+            <li class="breadcrumb-item">Proveedor</li>
+        </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+        <div class="col-lg-8">
+
+            <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Formulario Proveedor</h5>
+
+                <!-- Create/Update Proveedor -->
+                <form method="POST" action="" novalidate autocomplete="off">
+                    {% csrf_token %}
+                    {{form.as_p}}
+
+                    {% for formset in inlines %}
+                        {{ formset.as_p }}
+                    {% endfor %} 
+                    <div class="col-12 text-end">
+                    <input type="submit" class="btn btn-primary" value="Guardar">
+                    <a href="{% url 'proveedores:proveedores-list' %}" class="btn btn-outline-primary">Cancelar</a>
+                    </div>
+                </form>
+                <!-- End Formulario Proveedor -->
+
+            </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-5"></div>
+
+        </div>
+    </section>
+
+
+{% endblock %}
+
+
+{% block jscript %}
+
+    <script>
+        $(function() {
+
+            $("#id_rut_proveedor").keypress(function(e){
+                var charTyped = String.fromCharCode(e.which);
+                const RUT_REGEXP = /[0-9kK\-]/;
+                
+                if (charTyped.match(RUT_REGEXP))
+                    return true;
+                else
+                    return false;           
+            });   
+
+        });
+    </script>
+
+{% endblock %}

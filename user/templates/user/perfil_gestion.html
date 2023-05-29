@@ -1,0 +1,88 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+    
+    <div class="pagetitle">
+        <h1>Gestión de Usuarios</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                <li class="breadcrumb-item">Perfil</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-8">
+
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-title">Gestión Perfiles de Usuario</h5>
+
+                <form id="formGestionPerfil" method="post" data-subdptos-url="{% url 'user:ajax_load_subdptos' %}" 
+                data-unidades-url="{% url 'user:ajax_load_unidades' %}" action="" novalidate autocomplete="off">
+                    {% csrf_token %}
+                    {{form.as_p}}
+
+                    {% for formset in inlines %}
+                        {{ formset.as_p }}
+                    {% endfor %} 
+
+                    <div class="col-12 text-end">
+                        <input type="submit" class="btn btn-primary" value="Guardar">
+                        <a href="{% url 'user:usuarios-list' %}" class="btn btn-outline-primary">Cancelar</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-5"></div>
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block js %}
+<script>
+$(function() {
+
+    // Dropdown Departamento
+    $("#id_user_departamento").change(function () {
+      var url = $("#formGestionPerfil").attr("data-subdptos-url");          // obtener la url de la vista 'loadSubDepartamentos'
+      var DptoId = $(this).val();                                           // obtener id del Departamento
+
+        $.ajax({                                      
+            url: url,                                                       // request url (localhost:8000/formularios/ajax/load-subdptos/)
+            data: {
+              'dpto': DptoId                                                // id del Departamento como parámetro 
+            },
+            success: function (data) {                    
+              $("#id_user_subdepartamento").html(data);                     // poblar dropdown subdepartamento
+            }
+        });
+    });
+
+    // Dropdown SubDepartamento
+    $("#id_user_subdepartamento").change(function () {
+      var url = $("#formGestionPerfil").attr("data-unidades-url");          // obtener la url de la vista 'loadSubDepartamentos'
+      var SubDptoId = $(this).val();                                        // obtener id del SubDepartamento
+
+        $.ajax({                                                
+            url: url,                                                       // request url (localhost:8000/formularios/ajax/load-unidades/)
+            data: {
+              'subdpto': SubDptoId                                          // id de Subdepartamento como parámetro 
+            },
+            success: function (data) {                            
+              $("#id_user_unidad").html(data);                              // poblar dropdown Unidad
+            }
+        });
+    });
+
+});
+</script>
+{% endblock %}

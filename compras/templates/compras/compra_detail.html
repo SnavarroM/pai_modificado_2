@@ -1,0 +1,155 @@
+{% extends 'insumos/index.html' %}
+
+{% load humanize %}
+
+{% block content %}
+
+<div class="pagetitle">
+    <h1>Facturas</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'compras:compras-list' %}">Inicio</a></li>
+            <li class="breadcrumb-item">Factura</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+
+        <div class="card">
+            <div class="card-body">
+            <h5 class="card-title"></h5>
+
+            {% if compra %}
+
+            <div class="col-md-12">
+                <div class="row">
+                    <label class="col-sm-2 col-form-label fw-bold">Proveedor</label>
+                    <div class="col-sm-10">
+                        <label class="col-form-label">{{ compra.id_proveedor.rut_proveedor }}  |  {{ compra.id_proveedor }}</label>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label fw-bold">Fecha Compra</label>
+                        <div class="col-sm-10">
+                            <label class="col-form-label">{{ compra.fecha_compra }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label fw-bold">Guía</label>
+                        <div class="col-sm-10">
+                            <label class="col-form-label">{{ compra.guia }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label fw-bold">Orden de Compra</label>
+                        <div class="col-sm-10">
+                            <label class="col-form-label">{{ compra.orden_de_compra }}</label>
+                        </div>
+                    </div>
+                </div>
+
+            <br><br>
+
+                {% if detallecompra %}
+
+                <table class="table">
+                    <thead class="text-center label-detail">
+                        <tr>
+                            <th scope="col">Código Insumo</th>
+                            <th scope="col">Insumo</th>                      
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Precio Neto</th>
+                            <th scope="col">Precio con IVA</th>
+                            <th scope="col">Precio Promedio</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        {% for detcom in detallecompra %}
+                        <tr>
+                            <td>{{ detcom.id_insumo.codigo_insumo }}</td>                        
+                            <td class="text-start">{{ detcom.id_insumo }}</td>
+                            <td>{{ detcom.cantidad }}</td>
+                            <td>{{ detcom.precio_unitario|intcomma }}</td>
+                            <td>{{ detcom.precio_promedio|intcomma }}</td>
+                            <td>$ {{ detcom.precio_con_iva|intcomma }}</td>
+                            <td>$ {{ detcom.total_insumo|intcomma }}</td>
+                        </tr>                
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% endif %}
+
+                <br><br>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-sm-8"></div>
+                        <label class="col-sm-2 col-form-label fw-bold">Descuento</label>
+                        <div class="col-sm-2 text-end">
+                            <label class="col-form-label">$ {{ compra.descuento|intcomma }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-sm-8"></div>
+                        <label class="col-sm-2 col-form-label fw-bold">Total Neto</label>
+                        <div class="col-sm-2 text-end">
+                            <label class="col-form-label">$ {{ compra.total_neto|intcomma }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-sm-8"></div>
+                        <label class="col-sm-2 col-form-label fw-bold">Total IVA</label>
+                        <div class="col-sm-2 text-end">
+                            <label class="col-form-label">$ {{ compra.total_iva|intcomma }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-sm-8"></div>
+                        <label class="col-sm-2 col-form-label fw-bold">Total Compra</label>
+                        <div class="col-sm-2 text-end">
+                            <label class="col-form-label">$ {{ compra.total_compra|intcomma }}</label>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row mb-3 me-3">
+        <div class="col-12 text-end">
+            <a href="{% url 'compras:compras-list' %}" class="btn btn-outline-primary">Volver</a>
+        </div>  
+    </div>
+</div>
+
+<div class="col-lg-5"></div>
+
+</div>
+</section>
+
+{% endblock %}

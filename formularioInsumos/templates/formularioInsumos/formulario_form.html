@@ -1,0 +1,276 @@
+{% extends 'insumos/index.html' %}
+
+{% block content %}
+    
+      <div class="pagetitle">
+        <h1>Insumos</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'formularios:index' %}">Inicio</a></li>
+            <li class="breadcrumb-item">Formulario Solicitud Insumos</li>
+          </ol>
+        </nav>
+      </div><!-- End Page Title -->
+  
+      <section class="section">
+        <div class="row">
+          <div class="col-lg-12">
+  
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Formulario Solicitud Insumos</h5>
+  
+                <!-- Create/Update FormularioInsumos -->
+                <form id="formFormulario" enctype="multipart/form-data" method="post" autocomplete="off">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+
+                        {% if 'form-header' in field.field.widget.attrs.class %}
+                        <div class="form-group mb-2">
+                            <label>{{field.label}}</label>
+                            {% if field.field.required %}
+                                <span class="required"></span>
+                            {% endif %}
+                        
+                            {{field}}
+                            {% if field.help_text %}
+                                <small style="color: grey">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <p style="color: red">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+                        <!-- inline form for detalle Fsctura Compra start -->
+
+                        <!-- EXPLAINING with named_formsets.variants as formset -->
+                        <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                        <!-- Note: here variants is our CompraInsumoFormSet name, used in get_named_formsets function in views.py -->
+
+                        {% with named_formsets.detallesolicitud as formset %}
+                            {{ formset.management_form }}
+
+                            <script type="text/html" id="detallesolicitud-template">
+                                <tr id="detallesolicitud-__prefix__" class= hide_all>
+                                    {% for fields in formset.empty_form.hidden_fields %}
+                                        {{ fields }}
+                                    {% endfor %}
+                                
+                                    {% for fields in formset.empty_form.visible_fields %}
+                                        <td>{{fields}}</td>
+                                    {% endfor %}
+
+                                    <td><button type="button" class="btn btn-sm btn-warning delete-item-solic">Eliminar</button></td>
+                                </tr>
+                            </script>
+
+
+                            <div class="d-flex mt-3">
+                                <div class="col-6 flex-fill">
+                                    <h5 class="card-title col-6">Detalle Insumos</h5>
+                                </div>
+                            
+                                <div class="col-6 flex-fill text-end mt-3">
+                                    <a href="#" id="add-detallesolicitud-button" class="btn btn-primary add-detallesolicitud">Agregar Insumo</a>
+                                </div>
+                            </div>
+
+
+                                <table class="table table-striped">
+                                    <thead class="text-center">
+                                        <th scope="col" class="required">Insumo </th>
+                                        <th scope="col" class="required">Cantidad </th>
+                                        <th scope="col" class="d-none"></th>
+                                    </thead>
+                                    <tbody id="item-detallesolicitud">
+
+                                        {% for formss in formset %}
+                                            {{ formss.management_form }}
+                                            <tr id="detallesolicitud-{{ forloop.counter0 }}" class= hide_all> 
+                                                {{ formss.id }}
+                                                {% for field in formss.visible_fields %}
+                                                    <td>
+                                                        {{ field }}
+                                                        {% for error in field.errors %}
+                                                            <span style="color: red">{{ error }}</span>
+                                                        {% endfor %}
+                                                    </td>
+                                                {% endfor %}
+
+                                              {% if formss.instance.pk %}
+                                                    <td>
+                                                        
+                                                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal{{formss.instance.pk}}" onclick="$('#exampleModal{{formss.instance.pk}}').modal('show')">
+                                                            Eliminar
+                                                        </button>
+                                                        < ! -- Modal -- 
+                                                        <div class="modal fade" id="exampleModal{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel{{formss.instance.pk}}"¿Desea eliminar el registro?</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a href="{% url 'formularios:index' formss.instance.pk %}" type="button" class="btn btn-primary">Eliminar</a>
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                
+                                                {% else %} 
+                                                    <td><button type="button" class="btn btn-sm btn-warning delete-item-solic d-none">Eliminar</button></td>
+                                                {% endif %}
+
+                                            </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>                      
+                            
+                            {% endwith %}
+                            <!-- inline form for Factura Compra end -->
+
+                            {% for field in form %}
+
+                              {% if 'form-hidden' in field.field.widget.attrs.class %}                              
+                                  {{field}}
+                              {% endif %}
+
+                            {% endfor %}
+                    <br><br>
+
+                    <div class="col-12 text-end">
+                      <input type="submit" class="btn btn-primary" value="Guardar">
+                      <a href="{% url 'formularios:index' %}" class="btn btn-outline-primary">Cancelar</a>
+                    </div>
+
+                </form>
+                <!-- End Formulario FormularioInsumos -->
+  
+              </div>
+            </div>
+  
+          </div>
+  
+          <div class="col-lg-5"></div>
+          
+        </div>
+      </section>
+  
+{% endblock %}
+
+
+{% block jscript %}
+<script>
+  $(function() {
+
+    $(window).on("load",function() {
+      // Eliminar fila extra en detalle insumo
+      if ( $("#item-detallesolicitud tr").length > 1) {
+          $("#item-detallesolicitud tr:last").remove();
+      }
+
+      insumos_sinstock();
+    });
+
+
+    $('.disabled').on('mousedown', function(e) {
+      e.preventDefault();
+    });
+
+    $('.select2').on('click', function(e) {
+      $("li[class*='option--disabled']").attr('style', 'background-color:#f8d7da !important');
+    });
+
+    $('.add-detallesolicitud').click(function(ev) {
+      ev.preventDefault();
+      var count = $('#item-detallesolicitud').children().length;
+      var tmplMarkup = $('#detallesolicitud-template').html();
+      var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);        
+      $('#item-detallesolicitud').append(compiledTmpl);
+      // update form count
+      $('#id_detallesolicitud-TOTAL_FORMS').attr('value', count+1);
+
+      insumos_sinstock();
+
+      if ( $("#item-detallesolicitud tr").length > 1) {
+          $(".delete-item-solic").removeClass("d-none");
+      } else {
+          $(".delete-item-solic").addClass("d-block");
+      }
+
+  });
+
+
+  function insumos_sinstock() {
+    let url = "{% url 'formularioInsumos:ajax_insumos_sinstock' %}"
+
+    $.ajax({                                      
+        url: url,                                                 
+        success: function (resp) {              
+
+          if (resp != null)
+              $.each(resp.data, function (key, value) {                
+                $("select[name*='id_insumo'] option[value='" + value + "']").prop('disabled','disabled').append("&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; * Sin Stock *");
+              });
+
+        }
+    });
+  } 
+
+
+  $(document).on("click",'.delete-item-solic',function(){
+    if ( $("#item-detallesolicitud tr").length > 1) {
+        $(this).closest("tr").remove();
+    }
+
+    if ( $("#item-detallesolicitud tr").length == 1) {
+        $(".delete-item-solic").addClass("d-none").removeClass("d-block");
+    } 
+  });
+
+
+    // Dropdown Departamento
+/*    $("#id_id_departamento").change(function () {
+      var url = $("#formFormulario").attr("data-subdptos-url");   // obtener la url de la vista 'loadSubDepartamentos'
+      var DptoId = $(this).val();                                 // obtener id del Departamento
+
+      $.ajax({                                      
+        url: url,                                                 // request url (localhost:8000/formularios/ajax/load-subdptos/)
+        data: {
+          'dpto': DptoId                                          // id del Departamento como parámetro 
+        },
+        success: function (data) {                    
+          $("#id_id_sub_departamento").html(data);                // poblar dropdown subdepartamento
+        }
+      });
+    });
+
+    // Dropdown SubDepartamento
+    $("#id_id_sub_departamento").change(function () {
+      var url = $("#formFormulario").attr("data-unidades-url");   // obtener la url de la vista 'loadSubDepartamentos'
+      var SubDptoId = $(this).val();                              // obtener id del SubDepartamento
+
+      $.ajax({                                                
+        url: url,                                                 // request url (localhost:8000/formularios/ajax/load-unidades/)
+        data: {
+          'subdpto': SubDptoId                                    // id de Subdepartamento como parámetro 
+        },
+        success: function (data) {                            
+          $("#id_id_unidad").html(data);                          // poblar dropdown Unidad
+        }
+      });
+    });*/
+
+  });
+</script>
+{% endblock %}
